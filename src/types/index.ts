@@ -18,19 +18,13 @@ export interface Chapter {
   title: string;
   content: string;
   order: number;
-  duration: number; // in minutes
 }
 
 export interface Exercise {
   id: string;
   title: string;
   question: string;
-  type: 'multiple-choice' | 'code' | 'text';
-  options?: string[];
-  correctAnswer: string;
   explanation: string;
-  points: number;
-  difficulty: number; // 1-5
   subject: Subject;
 }
 
@@ -38,9 +32,7 @@ export interface Exam {
   id: string;
   title: string;
   description: string;
-  duration: number; // in minutes
   questions: ExamQuestion[];
-  passingGrade: number; // 0-100
   subject: Subject;
 }
 
@@ -63,19 +55,9 @@ export type Subject =
   | 'geography'
   | 'languages';
 
-export interface UserProgress {
-  userId: string;
-  courseProgress: CourseProgress[];
-  completedExercises: string[];
-  examResults: ExamResult[];
-}
 
-export interface CourseProgress {
-  courseId: string;
-  completedChapters: string[];
-  lastAccessed: Date;
-  progressPercentage: number;
-}
+
+
 
 export interface ExamResult {
   examId: string;

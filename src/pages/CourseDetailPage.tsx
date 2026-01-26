@@ -5,6 +5,7 @@ import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { FiBookOpen, FiPlay, FiArrowLeft, FiChevronRight } from 'react-icons/fi';
 import type { Chapter, Course } from '../types';
+import Spinner from '../components/utils/Spinner';
 const coursesData = [
   {
     "id": "1",
@@ -50,7 +51,9 @@ const CourseDetailPage: React.FC = () => {
     const foundCourse = coursesData.find(c => c.id === id) || null;
     setCourse(foundCourse as Course | null);
     setSelectedChapter(foundCourse?.chapters[0] || null);
-    setLoading(false);
+   setInterval(() => {
+     setLoading(false);
+   }, 1000);
   }, [id]);
 
   const handleChapterSelect = (chapter: Chapter) => {
@@ -73,7 +76,7 @@ const CourseDetailPage: React.FC = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {return <Spinner/>}
   if (!course) return (
     <div className="text-center py-16">
       <h2 className="text-2xl font-bold">Cours non trouvé</h2>

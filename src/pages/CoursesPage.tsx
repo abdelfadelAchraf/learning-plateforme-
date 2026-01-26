@@ -3,8 +3,6 @@ import { useTranslation } from "react-i18next";
 import { FiSearch } from "react-icons/fi";
 import type { Course, Subject } from "../types";
 import CourseCard from "../courses/CourseCard";
-import Skeleton from "../components/utils/Skelton";
-import { CgSpinner } from "react-icons/cg";
 import Spinner from "../components/utils/Spinner";
 
 // Mock data
@@ -21,14 +19,12 @@ const mockCourses: Course[] = [
         title: "Nombres et opérations",
         content: "...",
         order: 1,
-        duration: 60,
       },
       {
         id: "1-2",
         title: "Algèbre élémentaire",
         content: "...",
         order: 2,
-        duration: 90,
       },
     ],
   },
@@ -44,14 +40,12 @@ const mockCourses: Course[] = [
         title: "Mécanique classique",
         content: "...",
         order: 1,
-        duration: 120,
       },
       {
         id: "2-2",
         title: "Thermodynamique",
         content: "...",
         order: 2,
-        duration: 90,
       },
     ],
   },
@@ -67,14 +61,12 @@ const mockCourses: Course[] = [
         title: "Introduction",
         content: "...",
         order: 1,
-        duration: 60,
       },
       {
         id: "3-2",
         title: "Réactions organiques",
         content: "...",
         order: 2,
-        duration: 120,
       },
     ],
   },
@@ -89,14 +81,12 @@ const mockCourses: Course[] = [
         title: "Syntaxe de base",
         content: "...",
         order: 1,
-        duration: 60,
       },
       {
         id: "4-2",
         title: "Structures de contrôle",
         content: "...",
         order: 2,
-        duration: 90,
       },
     ],
   },
@@ -148,8 +138,9 @@ const CoursesPage: React.FC = () => {
     ...(Object.keys(t("subjects", { returnObjects: true })) as Subject[]),
   ];
 
-if(loading){return <Spinner />}
-
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="page-container">
@@ -219,18 +210,18 @@ if(loading){return <Spinner />}
           <p className="text-gray-600 mb-6">
             Essayez de modifier vos critères de recherche
           </p>
-          <button
-            onClick={() => {
-              setSelectedSubject("all");
-              setSelectedDifficulty("all");
-              setSearchQuery("");
-            }}
-            className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-          >
-            Réinitialiser les filtres
-          </button>
         </div>
       )}
+      <button
+        onClick={() => {
+          setSelectedSubject("all");
+          setSelectedDifficulty("all");
+          setSearchQuery("");
+        }}
+        className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+      >
+        Réinitialiser les filtres
+      </button>
     </div>
   );
 };
