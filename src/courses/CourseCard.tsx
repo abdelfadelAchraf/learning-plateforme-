@@ -64,16 +64,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
 
         <p className="text-gray-600 mb-6 line-clamp-3">{course.description}</p>
 
-        {/* Actions */}
-        <div className="flex justify-between items-center">
-          <Link
-            to={`/courses/${course.id}`}
-            className="inline-flex items-center text-primary-600 font-semibold group-hover:text-primary-700 transition-colors"
-          >
-            Commencer
-            <FiArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
+  
       </div>
     </Link>
   );
