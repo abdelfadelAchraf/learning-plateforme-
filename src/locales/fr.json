@@ -1,0 +1,98 @@
+{
+  "app": {
+    "title": "Plateforme d'Apprentissage",
+    "subtitle": "Maîtrisez les connaissances avec nos cours, exercices et examens"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "courses": "Cours",
+    "exercises": "Exercices",
+    "exams": "Examens",
+    "dashboard": "Tableau de Bord",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "register": "Inscription"
+  },
+  "home": {
+    "welcome": "Bienvenue sur notre plateforme d'apprentissage",
+    "description": "Accédez à des cours de qualité, des exercices pratiques et des examens pour tester vos connaissances dans diverses matières.",
+    "startLearning": "Commencer à apprendre",
+    "features": {
+      "courses": {
+        "title": "Cours complets",
+        "description": "Des cours structurés par chapitres avec explications détaillées"
+      },
+      "exercises": {
+        "title": "Exercices pratiques",
+        "description": "Pratiquez avec des exercices interactifs et obtenez des corrections immédiates"
+      },
+      "exams": {
+        "title": "Examens évalués",
+        "description": "Testez vos connaissances avec des examens chronométrés et notés"
+      }
+    }
+  },
+  "courses": {
+    "title": "Cours disponibles",
+    "search": "Rechercher un cours...",
+    "filterBySubject": "Filtrer par matière",
+    "allSubjects": "Toutes les matières",
+    "difficulty": "Difficulté",
+    "duration": "Durée",
+    "hours": "heures",
+    "minutes": "minutes",
+    "start": "Commencer",
+    "continue": "Continuer",
+    "completed": "Terminé",
+    "progress": "Progression",
+    "chapters": "Chapitres"
+  },
+  "exercises": {
+    "title": "Exercices",
+    "selectSubject": "Sélectionner une matière",
+    "difficultyLevel": "Niveau de difficulté",
+    "points": "points",
+    "submit": "Soumettre",
+    "checkAnswer": "Vérifier la réponse",
+    "nextExercise": "Exercice suivant",
+    "correct": "Correct !",
+    "incorrect": "Incorrect. Essayez encore !",
+    "showSolution": "Afficher la solution",
+    "score": "Score"
+  },
+  "exams": {
+    "title": "Examens",
+    "availableExams": "Examens disponibles",
+    "startExam": "Commencer l'examen",
+    "timeRemaining": "Temps restant",
+    "questions": "questions",
+    "passingGrade": "Note de passage",
+    "yourScore": "Votre score",
+    "submitExam": "Soumettre l'examen",
+    "reviewAnswers": "Revoir les réponses"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "finish": "Terminer",
+    "view": "Voir",
+    "edit": "Modifier",
+    "delete": "Supprimer"
+  },
+  "subjects": {
+    "mathematics": "Mathématiques",
+    "physics": "Physique",
+    "chemistry": "Chimie",
+    "biology": "Biologie",
+    "computerScience": "Informatique",
+    "history": "Histoire",
+    "geography": "Géographie",
+    "languages": "Langues"
+  }
+}

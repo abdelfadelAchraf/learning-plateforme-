@@ -1,0 +1,98 @@
+{
+  "app": {
+    "title": "Learning Platform",
+    "subtitle": "Master knowledge with our courses, exercises, and exams"
+  },
+  "navigation": {
+    "home": "Home",
+    "courses": "Courses",
+    "exercises": "Exercises",
+    "exams": "Exams",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register"
+  },
+  "home": {
+    "welcome": "Welcome to our learning platform",
+    "description": "Access quality courses, practical exercises, and exams to test your knowledge in various subjects.",
+    "startLearning": "Start Learning",
+    "features": {
+      "courses": {
+        "title": "Complete Courses",
+        "description": "Structured courses with detailed explanations by chapters"
+      },
+      "exercises": {
+        "title": "Practical Exercises",
+        "description": "Practice with interactive exercises and get immediate corrections"
+      },
+      "exams": {
+        "title": "Graded Exams",
+        "description": "Test your knowledge with timed and graded exams"
+      }
+    }
+  },
+  "courses": {
+    "title": "Available Courses",
+    "search": "Search for a course...",
+    "filterBySubject": "Filter by subject",
+    "allSubjects": "All Subjects",
+    "difficulty": "Difficulty",
+    "duration": "Duration",
+    "hours": "hours",
+    "minutes": "minutes",
+    "start": "Start",
+    "continue": "Continue",
+    "completed": "Completed",
+    "progress": "Progress",
+    "chapters": "Chapters"
+  },
+  "exercises": {
+    "title": "Exercises",
+    "selectSubject": "Select a subject",
+    "difficultyLevel": "Difficulty level",
+    "points": "points",
+    "submit": "Submit",
+    "checkAnswer": "Check Answer",
+    "nextExercise": "Next Exercise",
+    "correct": "Correct!",
+    "incorrect": "Incorrect. Try again!",
+    "showSolution": "Show Solution",
+    "score": "Score"
+  },
+  "exams": {
+    "title": "Exams",
+    "availableExams": "Available Exams",
+    "startExam": "Start Exam",
+    "timeRemaining": "Time Remaining",
+    "questions": "questions",
+    "passingGrade": "Passing Grade",
+    "yourScore": "Your Score",
+    "submitExam": "Submit Exam",
+    "reviewAnswers": "Review Answers"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "subjects": {
+    "mathematics": "Mathematics",
+    "physics": "Physics",
+    "chemistry": "Chemistry",
+    "biology": "Biology",
+    "computerScience": "Computer Science",
+    "history": "History",
+    "geography": "Geography",
+    "languages": "Languages"
+  }
+}
