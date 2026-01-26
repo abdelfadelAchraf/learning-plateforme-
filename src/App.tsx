@@ -4,6 +4,7 @@ import { I18nextProvider } from "react-i18next";
 // Layout
 import Layout from "./components/Layout/Layout";
 import i18n from "./locales/i18n";
+import ScrollToTop from "./components/utils/ScrollToTop";
 // Pages (lazy loading)
 const HomePage = React.lazy(() => import("./pages/HomePage"));
 const CoursesPage = React.lazy(() => import("./pages/CoursesPage"));
@@ -26,6 +27,7 @@ const App: React.FC = () => {
                 </div>
               }
             >
+              <ScrollToTop />
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/courses" element={<CoursesPage />} />
