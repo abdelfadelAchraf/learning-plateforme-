@@ -50,6 +50,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
     <>
       {Array.from({ length: count }).map((_, i) => (
         <div
+          role="presentation"
           key={i}
           className={`skeleton-loader ${className}`}
           style={baseStyle}

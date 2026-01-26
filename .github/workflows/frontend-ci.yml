@@ -1,44 +1,30 @@
-name: Frontend-test
+name: Frontend CI
 
-on: push 
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  super-lint:
-    name: Lint code branche
+  test:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code 
-        uses: actions/checkout@v2
-      - name: Run super linter 
-        uses: github/super-lint@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-# name: Frontend CI
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
 
-# on:
-#   push:
-#     branches: [ main, develop ]
-#   pull_request:
-#     branches: [ main, develop ]
+      - name: Install deps
+        run: npm ci
 
-# jobs:
-#   test:
-#     runs-on: ubuntu-latest
+      - name: Run tests
+        run: npm run test
 
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v4
-
-#       - name: Use Node
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: 20
-#           cache: npm
-
-#       - name: Install deps
-#         run: npm ci
-
-#       - name: Run tests
-#         run: npm run test
-
-#       - name: Build app
-#         run: npm run build
+      # - name: Build app
+      #   run: npm run build
