@@ -4,9 +4,6 @@ import { I18nextProvider } from "react-i18next";
 // Layout
 import Layout from "./components/Layout/Layout";
 import i18n from "./locales/i18n";
-import Markdown from "react-markdown";
-import Skeleton from "./components/utils/Skelton";
-
 // Pages (lazy loading)
 const HomePage = React.lazy(() => import("./pages/HomePage"));
 const CoursesPage = React.lazy(() => import("./pages/CoursesPage"));
@@ -17,22 +14,8 @@ const ExamsPage = React.lazy(() => import("./pages/ExamsPage"));
 // const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage'));
 
 const App: React.FC = () => {
-  const markdown = `
-
-
-\`\`\`python
-print('3 backticks or')
-print('indent 4 spaces')
-\`\`\`
-`;
-
   return (
     <main className="px-4 ">
-      {/* <div className="prose lg:prose-xl">
-         <Markdown>{markdown}</Markdown>
-      </div> */}
-      <Skeleton width={200} height={20} count={10} />
-     
       <I18nextProvider i18n={i18n}>
         <Router>
           <Layout>
