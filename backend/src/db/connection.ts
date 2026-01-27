@@ -3,11 +3,11 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/education_db';
+const MONGODB_URI  = process.env.MONGODB_URI;
 
 export const connectDB = async (): Promise<void> => {
   try {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(MONGODB_URI as string);
     console.log('✅ MongoDB connecté avec succès');
   } catch (error) {
     console.error(' Erreur de connexion MongoDB:', error);
