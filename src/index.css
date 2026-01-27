@@ -2,5 +2,5 @@
 @plugin '@tailwindcss/typography';
 
 button{cursor: pointer;}
-html{scroll-behavior: smooth;}
-*{font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;}
+html{scroll-behavior: smooth;scrollbar-width: thin ; scroll-snap-type: mandatory;}
+/* *{font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;} */

@@ -7,6 +7,8 @@ import {
 } from "react-icons/fi";
 import type { Exercise, Subject } from "../types";
 import Spinner from "../components/utils/Spinner";
+import { useQuery } from "@apollo/client/react";
+import { GET_EXERCISES } from "../graphql/queries/exercices";
 
 const ExercisesPage: React.FC = () => {
   const { t } = useTranslation();
@@ -22,76 +24,24 @@ const ExercisesPage: React.FC = () => {
   );
   const [showResult, setShowResult] = useState(false);
 
+  // GraphQL Query
+  const { data, loading: graphqlLoading, error } = useQuery<{exercises:Exercise[]}>(GET_EXERCISES, {
+    variables: selectedSubject !== "all" 
+      ? { subject: selectedSubject } 
+      : {},
+  });
+
   useEffect(() => {
-    // Mock data
-    const mockExercises: Exercise[] = [
-      {
-        id: "1",
-        title: "Addition de fractions",
-        question: "Calculez: 3/4 + 2/3 = ?",
-        type: "text",
-        correctAnswer: "17/12",
-        explanation:
-          "Pour additionner des fractions, on les réduit au même dénominateur. 3/4 = 9/12 et 2/3 = 8/12, donc 9/12 + 8/12 = 17/12.",
-        points: 10,
-        difficulty: 2,
-        subject: "mathematics",
-      },
-      {
-        id: "2",
-        title: "Équation du second degré",
-        question: "Résolvez l'équation: x² - 5x + 6 = 0",
-        type: "multiple-choice",
-        options: [
-          "x = 2 et x = 3",
-          "x = 1 et x = 6",
-          "x = -2 et x = -3",
-          "Pas de solution",
-        ],
-        correctAnswer: "x = 2 et x = 3",
-        explanation:
-          "Le discriminant Δ = b² - 4ac = 25 - 24 = 1. Les solutions sont x₁ = (5-1)/2 = 2 et x₂ = (5+1)/2 = 3.",
-        points: 15,
-        difficulty: 3,
-        subject: "mathematics",
-      },
-      {
-        id: "3",
-        title: "Loi de Newton",
-        question:
-          "Selon la deuxième loi de Newton, quelle est la relation entre force, masse et accélération?",
-        type: "multiple-choice",
-        options: ["F = m/a", "F = m × a", "F = m + a", "F = m - a"],
-        correctAnswer: "F = m × a",
-        explanation:
-          "La deuxième loi de Newton énonce que la force résultante appliquée à un objet est égale à la masse de l'objet multipliée par son accélération.",
-        points: 10,
-        difficulty: 2,
-        subject: "physics",
-      },
-      {
-        id: "4",
-        title: "Structure atomique",
-        question: "Combien de protons possède un atome de carbone (C)?",
-        type: "text",
-        correctAnswer: "6",
-        explanation:
-          "Le carbone a un numéro atomique de 6, ce qui signifie qu'il possède 6 protons dans son noyau.",
-        points: 5,
-        difficulty: 1,
-        subject: "chemistry",
-      },
-    ];
-
-    setExercises(mockExercises);
-    setFilteredExercises(mockExercises);
-    setSelectedExercise(mockExercises[0]);
-
-    //  similate fetching data
-    setInterval(() => {
+    if (data?.exercises && !graphqlLoading) {
+      const fetchedExercises = data.exercises;
+      setExercises(fetchedExercises);
+      setFilteredExercises(fetchedExercises);
+      if (fetchedExercises.length > 0) {
+        setSelectedExercise(fetchedExercises[0]);
+      }
       setLoading(false);
-    }, 1000);
-  }, []);
+    }
+  }, [data, graphqlLoading]);
 
   useEffect(() => {
     let result = exercises;
@@ -99,8 +49,6 @@ const ExercisesPage: React.FC = () => {
     if (selectedSubject !== "all") {
       result = result.filter((ex) => ex.subject === selectedSubject);
     }
-
-  
 
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
@@ -118,14 +66,30 @@ const ExercisesPage: React.FC = () => {
     ) {
       setSelectedExercise(result[0]);
     }
-  }, [selectedSubject, searchQuery, exercises]);
+  }, [selectedSubject, searchQuery, exercises, selectedExercise]);
 
-  
-
-  
-
-  if (loading) {
+  if (loading || graphqlLoading) {
     return <Spinner />;
+  }
+
+  if (error) {
+    return (
+      <div className="page-container">
+        <div className="text-center py-16 bg-white rounded-xl shadow-lg">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            Erreur de chargement
+          </h3>
+          <p className="text-gray-600">
+            {error.message}
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (

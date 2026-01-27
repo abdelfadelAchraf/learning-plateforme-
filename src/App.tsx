@@ -1,10 +1,12 @@
 import React, { Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { I18nextProvider } from "react-i18next";
+
 // Layout
 import Layout from "./components/Layout/Layout";
 import i18n from "./locales/i18n";
 import ScrollToTop from "./components/utils/ScrollToTop";
+import usePageTitle from "./hooks/usePageTitle";
 // Pages (lazy loading)
 const HomePage = React.lazy(() => import("./pages/HomePage"));
 const CoursesPage = React.lazy(() => import("./pages/CoursesPage"));
@@ -15,8 +17,13 @@ const ExamsPage = React.lazy(() => import("./pages/ExamsPage"));
 // const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage'));
 
 const App: React.FC = () => {
+  usePageTitle("Home | Learning Platform");
+
+
   return (
-    <main className="px-4 ">
+    <main className="overflow-hidden px-3">
+      
+
       <I18nextProvider i18n={i18n}>
         <Router>
           <Layout>

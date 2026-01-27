@@ -1,8 +1,9 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FiArrowRight } from "react-icons/fi";
 import type { Course } from "../types";
+import Latex from "react-latex";
 
 interface CourseCardProps {
   course: Course;
@@ -59,7 +60,10 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         </div>
 
         <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
-          {course.title}
+           <Suspense fallback={<div>Loading Latex...</div>}>
+                  <Latex>{course.title}</Latex>
+                </Suspense>
+          
         </h3>
 
         <p className="text-gray-600 mb-6 line-clamp-3">{course.description}</p>

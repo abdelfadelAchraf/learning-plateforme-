@@ -1,0 +1,22 @@
+const { loading, error, data, refetch } = useQuery(GET_COURSES, {
+    variables: { subject: 'mathematics' }, // Optional filter
+    // pollInterval: 5000, // Optional: refetch every 5 seconds
+  });
+
+  if (loading) return <p>Loading courses...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+
+   <h2>Courses</h2>
+      <button onClick={() => refetch()}>Refresh</button>
+      
+      <div>
+        {data.courses.map((course: any) => (
+          <div key={course.id} style={{ border: '1px solid #ccc', padding: '1rem', margin: '1rem 0' }}>
+            <h3>{course.title}</h3>
+            <p>{course.description}</p>
+            <p><strong>Subject:</strong> {course.subject}</p>
+            <p><strong>Chapters:</strong> {course.chapters.length}</p>
+          </div>
+        ))}
+      </div>

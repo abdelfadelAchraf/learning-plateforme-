@@ -4,141 +4,55 @@ import { FiSearch } from "react-icons/fi";
 import type { Course, Subject } from "../types";
 import CourseCard from "../courses/CourseCard";
 import Spinner from "../components/utils/Spinner";
-
-// Mock data
-const mockCourses: Course[] = [
-  {
-    id: "1",
-    title: "Introduction aux Mathématiques",
-    description:
-      "Cours complet couvrant les bases des mathématiques avec exercices pratiques.",
-    subject: "mathematics",
-    chapters: [
-      {
-        id: "1-1",
-        title: "Nombres et opérations",
-        content: "...",
-        order: 1,
-      },
-      {
-        id: "1-2",
-        title: "Algèbre élémentaire",
-        content: "...",
-        order: 2,
-      },
-    ],
-  },
-  {
-    id: "2",
-    title: "Physique Fondamentale",
-    description:
-      "Découvrez les principes de base de la mécanique et de la thermodynamique.",
-    subject: "physics",
-    chapters: [
-      {
-        id: "2-1",
-        title: "Mécanique classique",
-        content: "...",
-        order: 1,
-      },
-      {
-        id: "2-2",
-        title: "Thermodynamique",
-        content: "...",
-        order: 2,
-      },
-    ],
-  },
-  {
-    id: "3",
-    title: "Chimie Organique",
-    description:
-      "Comprendre les bases de la chimie organique et les réactions chimiques.",
-    subject: "chemistry",
-    chapters: [
-      {
-        id: "3-1",
-        title: "Introduction",
-        content: "...",
-        order: 1,
-      },
-      {
-        id: "3-2",
-        title: "Réactions organiques",
-        content: "...",
-        order: 2,
-      },
-    ],
-  },
-  {
-    id: "4",
-    title: "Programmation Python",
-    description: "Apprenez les bases de la programmation avec Python.",
-    subject: "computerScience",
-    chapters: [
-      {
-        id: "4-1",
-        title: "Syntaxe de base",
-        content: "...",
-        order: 1,
-      },
-      {
-        id: "4-2",
-        title: "Structures de contrôle",
-        content: "...",
-        order: 2,
-      },
-    ],
-  },
-];
+import { useQuery } from "@apollo/client/react";
+import { GET_COURSES } from "../graphql/queries/courses";
+import usePageTitle from "../hooks/usePageTitle";
 
 const CoursesPage: React.FC = () => {
+  usePageTitle("Courses | Learning Platform");
+
   const { t } = useTranslation();
-  const [courses, setCourses] = useState<Course[]>([]);
   const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
   const [selectedSubject, setSelectedSubject] = useState<Subject | "all">(
     "all",
   );
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(true);
+
+  // GraphQL Query
+  const { data, loading, error } = useQuery<{ courses: Course[] }>(
+    GET_COURSES,
+    {
+      variables: selectedSubject !== "all" ? { subject: selectedSubject } : {},
+      pollInterval: 5000,
+      notifyOnNetworkStatusChange: false,
+    },
+  );
 
   useEffect(() => {
-    // Simuler un appel API
-    setTimeout(() => {
-      setCourses(mockCourses);
-      setFilteredCourses(mockCourses);
-      setLoading(false);
-    }, 800);
-  }, []);
+    if (data?.courses) {
+      let result = data.courses;
 
-  useEffect(() => {
-    let result = courses;
+      // Filtre par recherche
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        result = result.filter(
+          (course: Course) =>
+            course.title.toLowerCase().includes(query) ||
+            course.description.toLowerCase().includes(query),
+        );
+      }
 
-    // Filtre par sujet
-    if (selectedSubject !== "all") {
-      result = result.filter((course) => course.subject === selectedSubject);
+      setFilteredCourses(result);
     }
-
-    // Filtre par recherche
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (course) =>
-          course.title.toLowerCase().includes(query) ||
-          course.description.toLowerCase().includes(query),
-      );
-    }
-
-    setFilteredCourses(result);
-  }, [selectedSubject, selectedDifficulty, searchQuery, courses]);
+  }, [data, searchQuery, selectedDifficulty, selectedSubject]);
 
   const subjects: (Subject | "all")[] = [
     "all",
     ...(Object.keys(t("subjects", { returnObjects: true })) as Subject[]),
   ];
 
-  if (loading) {
+  if (loading || error) {
     return <Spinner />;
   }
 
@@ -167,7 +81,7 @@ const CoursesPage: React.FC = () => {
               placeholder={t("courses.search")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="input-field pl-10 py-3 w-full border border-black/20 focus:border-black/20  "
+              className="input-field pl-10 py-3 w-full border border-black/20 focus:border-black/20"
             />
           </div>
 
@@ -178,7 +92,7 @@ const CoursesPage: React.FC = () => {
               onChange={(e) =>
                 setSelectedSubject(e.target.value as Subject | "all")
               }
-              className="input-field border border-black/20 focus:border-black/20 py-3 "
+              className="input-field border border-black/20 focus:border-black/20 py-3 w-full"
             >
               {subjects.map((subject) => (
                 <option key={subject} value={subject}>
