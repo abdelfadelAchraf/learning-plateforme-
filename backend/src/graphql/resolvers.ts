@@ -1,9 +1,14 @@
-import { Course } from '../models/Course';
-import { User } from '../models/User';
-import { Exercise } from '../models/Exercise';
-import { Exam } from '../models/Exam';
-import { ExamResult } from '../models/ExamResult';
-import mongoose from 'mongoose';
+import { Course } from "../models/Course";
+import { User } from "../models/User";
+import { Exercise } from "../models/Exercise";
+import { Exam } from "../models/Exam";
+import { ExamResult } from "../models/ExamResult";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
+dotenv.config();
+import mongoose from "mongoose";
+import { AuthInput } from "../type";
 
 // Helper functions
 const convertQuestionType = (
@@ -34,14 +39,69 @@ const convertToGraphQLType = (
   }
 };
 
+// Admin credentials from .env
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+const JWT_SECRET = process.env.JWT_SECRET;
+
 export const root = {
   // ===== QUERY RESOLVERS =====
+  login: async ({ input }: { input: AuthInput }) => {
+    const { email, password } = input;
 
+    // Vérifier les credentials
+    if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
+      throw new Error("Email ou mot de passe incorrect");
+    }
+
+    // Créer un token JWT
+    const token = jwt.sign(
+      {
+        email,
+        role: "admin",
+        id: "admin-1",
+      },
+      JWT_SECRET as string,
+      { expiresIn: "24h" },
+    );
+
+    // Retourner la réponse
+    return {
+      token,
+      user: {
+        id: "admin-1",
+        email,
+        name: "Administrateur",
+        role: "admin",
+      },
+    };
+  },
+
+  logout: () => {
+    // Dans un système plus complexe, vous pourriez invalider le token
+    return true;
+  },
+
+  // Ajouter une vérification de token
+  verifyToken: async ({ token }: { token: string }) => {
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET as string) as any;
+      return {
+        valid: true,
+        user: decoded,
+      };
+    } catch (error) {
+      return {
+        valid: false,
+        error: "Token invalide ou expiré",
+      };
+    }
+  },
   // User Queries
   user: async ({ id }: { id: string }) => {
     return await User.findById(id);
   },
-  
+
   users: async () => {
     return await User.find();
   },
@@ -53,7 +113,7 @@ export const root = {
     }
     return await Course.find();
   },
-  
+
   course: async ({ id }: { id: string }) => {
     return await Course.findById(id);
   },
@@ -65,7 +125,7 @@ export const root = {
     }
     return await Exercise.find();
   },
-  
+
   exercise: async ({ id }: { id: string }) => {
     return await Exercise.findById(id);
   },
@@ -77,7 +137,7 @@ export const root = {
     }
     return await Exam.find();
   },
-  
+
   exam: async ({ id }: { id: string }) => {
     return await Exam.findById(id);
   },
@@ -87,16 +147,27 @@ export const root = {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       throw new Error("ID utilisateur invalide");
     }
-    return await ExamResult.find({ userId: new mongoose.Types.ObjectId(userId) });
+    return await ExamResult.find({
+      userId: new mongoose.Types.ObjectId(userId),
+    });
   },
-  
-  examResult: async ({ examId, userId }: { examId: string; userId: string }) => {
-    if (!mongoose.Types.ObjectId.isValid(examId) || !mongoose.Types.ObjectId.isValid(userId)) {
+
+  examResult: async ({
+    examId,
+    userId,
+  }: {
+    examId: string;
+    userId: string;
+  }) => {
+    if (
+      !mongoose.Types.ObjectId.isValid(examId) ||
+      !mongoose.Types.ObjectId.isValid(userId)
+    ) {
       throw new Error("ID invalide");
     }
-    return await ExamResult.findOne({ 
+    return await ExamResult.findOne({
       examId: new mongoose.Types.ObjectId(examId),
-      userId: new mongoose.Types.ObjectId(userId)
+      userId: new mongoose.Types.ObjectId(userId),
     });
   },
 
@@ -142,46 +213,46 @@ export const root = {
     return course.chapters[course.chapters.length - 1];
   },
 
-  updateChapter: async ({ 
-    courseId, 
-    chapterId, 
-    input 
-  }: { 
-    courseId: string; 
-    chapterId: string; 
-    input: any 
+  updateChapter: async ({
+    courseId,
+    chapterId,
+    input,
+  }: {
+    courseId: string;
+    chapterId: string;
+    input: any;
   }) => {
     const course = await Course.findById(courseId);
     if (!course) throw new Error("Cours non trouvé");
 
     const chapterIndex = course.chapters.findIndex(
-      (ch: any) => ch._id.toString() === chapterId
+      (ch: any) => ch._id.toString() === chapterId,
     );
-    
+
     if (chapterIndex === -1) throw new Error("Chapitre non trouvé");
 
     course.chapters[chapterIndex] = {
       ...course.chapters[chapterIndex].toObject(),
-      ...input
+      ...input,
     };
 
     await course.save();
     return course.chapters[chapterIndex];
   },
 
-  deleteChapter: async ({ 
-    courseId, 
-    chapterId 
-  }: { 
-    courseId: string; 
-    chapterId: string 
+  deleteChapter: async ({
+    courseId,
+    chapterId,
+  }: {
+    courseId: string;
+    chapterId: string;
   }) => {
     const course = await Course.findById(courseId);
     if (!course) throw new Error("Cours non trouvé");
 
     const initialLength = course.chapters.length;
     course.chapters = course.chapters.filter(
-      (ch: any) => ch._id.toString() !== chapterId
+      (ch: any) => ch._id.toString() !== chapterId,
     );
 
     if (course.chapters.length < initialLength) {
@@ -212,18 +283,18 @@ export const root = {
       ...input,
       questions: input.questions.map((q: any) => ({
         ...q,
-        type: convertQuestionType(q.type)
-      }))
+        type: convertQuestionType(q.type),
+      })),
     });
-    
+
     const savedExam = await exam.save();
-    
+
     return {
       ...savedExam.toObject(),
       questions: savedExam.questions.map((q: any) => ({
         ...q.toObject(),
-        type: convertToGraphQLType(q.type)
-      }))
+        type: convertToGraphQLType(q.type),
+      })),
     };
   },
 
@@ -236,17 +307,17 @@ export const root = {
     exam.subject = input.subject;
     exam.questions = input.questions.map((q: any) => ({
       ...q,
-      type: convertQuestionType(q.type)
+      type: convertQuestionType(q.type),
     }));
 
     await exam.save();
-    
+
     return {
       ...exam.toObject(),
       questions: exam.questions.map((q: any) => ({
         ...q.toObject(),
-        type: convertToGraphQLType(q.type)
-      }))
+        type: convertToGraphQLType(q.type),
+      })),
     };
   },
 
@@ -256,71 +327,77 @@ export const root = {
   },
 
   // Exam Question Mutations
-  addExamQuestion: async ({ examId, input }: { examId: string; input: any }) => {
+  addExamQuestion: async ({
+    examId,
+    input,
+  }: {
+    examId: string;
+    input: any;
+  }) => {
     const exam = await Exam.findById(examId);
     if (!exam) throw new Error("Examen non trouvé");
 
     const newQuestion = {
       ...input,
-      type: convertQuestionType(input.type)
+      type: convertQuestionType(input.type),
     };
 
     exam.questions.push(newQuestion);
     await exam.save();
 
     const addedQuestion = exam.questions[exam.questions.length - 1];
-    
+
     return {
       ...addedQuestion.toObject(),
-      type: convertToGraphQLType(addedQuestion.type)
+      type: convertToGraphQLType(addedQuestion.type),
     };
   },
 
-  updateExamQuestion: async ({ 
-    examId, 
-    questionId, 
-    input 
-  }: { 
-    examId: string; 
-    questionId: string; 
-    input: any 
+  updateExamQuestion: async ({
+    examId,
+    questionId,
+    input,
+  }: {
+    examId: string;
+    questionId: string;
+    input: any;
   }) => {
     const exam = await Exam.findById(examId);
     if (!exam) throw new Error("Examen non trouvé");
 
     const questionIndex = exam.questions.findIndex(
-      (q: any) => q._id.toString() === questionId
+      (q: any) => q._id.toString() === questionId,
     );
-    
+
     if (questionIndex === -1) throw new Error("Question non trouvée");
 
     exam.questions[questionIndex] = {
       ...exam.questions[questionIndex].toObject(),
       ...input,
-      type: convertQuestionType(input.type)
+      type: convertQuestionType(input.type),
     };
 
     await exam.save();
-    
+
     return {
       ...exam.questions[questionIndex].toObject(),
-      type: convertToGraphQLType(exam.questions[questionIndex].type)
+      type: convertToGraphQLType(exam.questions[questionIndex].type),
     };
   },
 
-  deleteExamQuestion: async ({ 
-    examId, 
-    questionId 
-  }: { 
-    examId: string; 
-    questionId: string 
+  deleteExamQuestion: async ({
+    examId,
+    questionId,
+  }: {
+    examId: string;
+    questionId: string;
   }) => {
     const exam = await Exam.findById(examId);
     if (!exam) throw new Error("Examen non trouvé");
 
     const initialLength = exam.questions.length;
     exam.questions = exam.questions.filter(
-      (q: any) => q._id.toString() !== questionId
+      (q: any) => q._id.toString() !== questionId,
     );
 
     if (exam.questions.length < initialLength) {
@@ -336,7 +413,7 @@ export const root = {
       ...input,
       userId: new mongoose.Types.ObjectId(input.userId),
       examId: new mongoose.Types.ObjectId(input.examId),
-      completedAt: new Date(input.completedAt || Date.now())
+      completedAt: new Date(input.completedAt || Date.now()),
     });
 
     return await examResult.save();

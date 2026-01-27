@@ -67,3 +67,17 @@ export interface ExamResult {
   completedAt: Date;
   passed: boolean;
 }
+
+export interface AuthInput {
+  email: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+  };
+}

@@ -198,4 +198,20 @@ export const schema = buildSchema(`
     # Exam Result Mutations
     submitExamResult(input: ExamResultInput!): ExamResult!
   }
+      # Auth Types
+  input AuthInput {
+    email: String!
+    password: String!
+  }
+
+  type AuthResponse {
+    token: String!
+    user: User!
+  }
+
+  type Mutation {
+    # ... autres mutations ...
+    login(input: AuthInput!): AuthResponse!
+    logout: Boolean!
+  }
 `);

@@ -1,6 +1,7 @@
 import React, { type ReactNode } from 'react';
 import Footer from './Footer';
 import Header from './Header';
+import path from 'path';
 
 interface LayoutProps {
   children: ReactNode;
@@ -13,7 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <main className="grow">
         {children}
       </main>
-      <Footer />
+      {window.location.pathname !== '/dashboard' && <Footer />}
     </div>
   );
 };
