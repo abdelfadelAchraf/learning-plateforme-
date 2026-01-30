@@ -4,6 +4,8 @@ import { useQuery } from "@apollo/client/react";
 import { FiBookOpen, FiFileText, FiClipboard, FiUsers } from "react-icons/fi";
 import { GET_DASHBOARD_STATS } from "../../graphql/queries/dashboard";
 import StatsCard from "../../components/StatsCard";
+import type { Course } from "../../types";
+import Spinner from "../../components/utils/Spinner";
 
 const Dashboard: React.FC = () => {
   const { data, loading, error } = useQuery(GET_DASHBOARD_STATS, {
@@ -13,9 +15,7 @@ const Dashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500">Chargement...</div>
-      </div>
+     <Spinner/>
     );
   }
 
@@ -85,7 +85,7 @@ const Dashboard: React.FC = () => {
             </button>
           </div>
           <div className="space-y-4">
-            {data?.totalCourses?.slice(0, 3).map((course: any) => (
+            {data?.totalCourses?.slice(0, 3).map((course: Course) => (
               <div
                 key={course.id}
                 className="flex items-center p-3 hover:bg-gray-50 rounded-lg"

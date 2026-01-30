@@ -128,6 +128,7 @@ export const schema = buildSchema(`
   input UserInput {
     name: String!
     email: String!
+    password: String! 
     preferredLanguage: Language!
   }
 
@@ -170,6 +171,9 @@ export const schema = buildSchema(`
     updateUser(id: ID!, input: UserInput!): User!
     deleteUser(id: ID!): Boolean!
     
+    login(input: AuthInput!): AuthResponse!
+    logout: Boolean!
+
     # Course Mutations
     createCourse(input: CourseInput!): Course!
     updateCourse(id: ID!, input: CourseInput!): Course!
@@ -209,9 +213,4 @@ export const schema = buildSchema(`
     user: User!
   }
 
-  type Mutation {
-    # ... autres mutations ...
-    login(input: AuthInput!): AuthResponse!
-    logout: Boolean!
-  }
 `);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FiMenu, FiX, FiBookOpen, FiHome, FiClipboard, FiBarChart2 } from 'react-icons/fi';
+import { FiMenu, FiX, FiBookOpen, FiHome, FiClipboard, FiBarChart2, FiSettings } from 'react-icons/fi';
 import LanguageSwitcher from '../../common/LanguageSwitcher';
 
 const Header: React.FC = () => {
@@ -14,6 +14,7 @@ const Header: React.FC = () => {
     { path: '/courses', label: t('navigation.courses'), icon: <FiBookOpen className="w-5 h-5" /> },
     { path: '/exercises', label: t('navigation.exercises'), icon: <FiClipboard className="w-5 h-5" /> },
     { path: '/exams', label: t('navigation.exams'), icon: <FiBarChart2 className="w-5 h-5" /> },
+    { path: '/dashboard', label: t('navigation.dashboard'), icon: <FiSettings className="w-5 h-5" /> },
   ];
 
   const toggleMobileMenu = () => {
@@ -44,11 +45,11 @@ const Header: React.FC = () => {
                   key={item.path}
                   to={item.path}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors duration-200
-                    hover:bg-black/50 hover:text-white 
+                    hover:text-white
                     ${
                     location.pathname === item.path
-                      ? 'bg-black/70 text-white'
-                      : 'text-gray-600 hover:text-primary-600 hover:bg-black/70'
+                       ? 'bg-violet-300 text-black'
+                      : 'bg-violet-300  '
                   }`}
                 >
                   {item.icon}
@@ -88,8 +89,8 @@ const Header: React.FC = () => {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-colors ${
                     location.pathname === item.path
-                      ? 'bg-primary-50 text-primary-600'
-                      : 'text-gray-600 hover:text-primary-600 hover:bg-gray-50'
+                      ? 'bg-violet-300 text-white'
+                      : 'text-violet-400 hover:text-white hover:bg-gray-50'
                   }`}
                 >
                   {item.icon}

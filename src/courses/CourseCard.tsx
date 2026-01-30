@@ -38,7 +38,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   return (
     <Link
       to={`/courses/${course.id}`}
-      className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary-100"
+      className="group bg-white rounded-md overflow-hidden  border border-black cardShadow"
     >
       {/* Course Header */}
       <div className="relative">

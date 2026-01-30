@@ -16,6 +16,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
     "@types/react-latex": "^2.0.3",
+    "antd": "^6.2.2",
     "axios": "^1.13.2",
     "graphql": "^16.12.0",
     "i18next": "^25.7.4",

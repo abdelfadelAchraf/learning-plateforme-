@@ -28,29 +28,14 @@ export const DELETE_USER = gql`
   }
 `;
 
-export const LOGIN_USER = gql`
-  mutation LoginUser($email: String!, $password: String!) {
-    loginUser(email: $email, password: $password) {
+export const LOGIN_MUTATION = gql`
+  mutation Login($input: AuthInput!) {
+    login(input: $input) {
       token
       user {
         id
         name
         email
-        preferredLanguage
-      }
-    }
-  }
-`;
-
-export const REGISTER_USER = gql`
-  mutation RegisterUser($input: UserInput!) {
-    registerUser(input: $input) {
-      token
-      user {
-        id
-        name
-        email
-        preferredLanguage
       }
     }
   }

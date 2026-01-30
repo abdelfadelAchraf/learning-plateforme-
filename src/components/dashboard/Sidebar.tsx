@@ -11,17 +11,18 @@ import {
   FiX,
   FiChevronRight,
 } from "react-icons/fi";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+ const { user, logout } = useAuth();
   const menuItems = [
     { path: "/dashboard", icon: FiGrid, label: "Dashboard" },
-    { path: "/courses", icon: FiBookOpen, label: "Cours" },
-    { path: "/exercises", icon: FiFileText, label: "Exercices" },
-    { path: "/exams", icon: FiClipboard, label: "Examens" },
-    { path: "/users", icon: FiUsers, label: "Utilisateurs" },
-    { path: "/settings", icon: FiSettings, label: "Paramètres" },
+    { path: "/dashboard/admin/courses", icon: FiBookOpen, label: "Cours" },
+    { path: "/dashboard/admin/exercises", icon: FiFileText, label: "Exercices" },
+    { path: "/dashboard/admin/exams", icon: FiClipboard, label: "Examens" },
+    { path: "/dashboard/admin/users", icon: FiUsers, label: "Utilisateurs" },
+    { path: "/dashboard/admin/settings", icon: FiSettings, label: "Paramètres" },
   ];
 
   const subjects = [
@@ -127,10 +128,12 @@ const Sidebar: React.FC = () => {
           <div className="p-4 border-t">
             <div className="flex items-center">
               <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
-                <span className="text-primary-600 font-semibold">A</span>
+                <span className="text-primary-600 font-semibold">
+                  {user?.name?.charAt(0) || "A"}
+                </span>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium">Admin</p>
+                <p className="text-sm font-medium">{user?.name}</p>
                 <p className="text-xs text-gray-500">Administrateur</p>
               </div>
             </div>

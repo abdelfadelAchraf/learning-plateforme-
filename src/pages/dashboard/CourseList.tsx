@@ -12,26 +12,50 @@ import {
   FiSearch,
   FiFilter,
 } from "react-icons/fi";
+import ActionNotification from '../../components/utils/ActionNotification';
+// Import the component
 
 const CourseList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubject, setSelectedSubject] = useState<Subject | ''>('');
+  const [showDeleteModal, setShowDeleteModal] = useState<string | null>(null);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
+  const [deletingCourse, setDeletingCourse] = useState<{id: string, title: string} | null>(null);
   
   const { data, loading, error, refetch } = useQuery<{courses:Course[]}>(GET_COURSES, {
     variables: { subject: selectedSubject || undefined },
   });
-  
-  const [deleteCourse] = useMutation(DELETE_COURSE);
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce cours ?')) {
-      try {
-        await deleteCourse({ variables: { id } });
-        refetch();
-      } catch (err) {
-        console.error('Erreur lors de la suppression:', err);
-      }
+  console.log("data" , data)
+  
+  const [deleteCourse] = useMutation(DELETE_COURSE, {
+    onCompleted: () => {
+      setDeleteSuccess(true);
+      refetch();
+      setShowDeleteModal(null);
+      setDeletingCourse(null);
+    },
+    onError: (err) => {
+      console.error('Erreur lors de la suppression:', err);
+      setShowDeleteModal(null);
+      setDeletingCourse(null);
+    },
+  });
+
+  const handleDeleteClick = (id: string, title: string) => {
+    setShowDeleteModal(id);
+    setDeletingCourse({id, title});
+  };
+
+  const confirmDelete = () => {
+    if (deletingCourse) {
+      deleteCourse({ variables: { id: deletingCourse.id } });
     }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(null);
+    setDeletingCourse(null);
   };
 
   const getSubjectLabel = (subject: Subject) => {
@@ -58,6 +82,26 @@ const CourseList: React.FC = () => {
 
   return (
     <div>
+      {/* Show success notification when delete is successful */}
+      {deleteSuccess && (
+        <ActionNotification 
+          type="Success" 
+          message="Cours supprimé avec succès!" 
+        />
+      )}
+
+      {/* Delete confirmation modal */}
+      {showDeleteModal && deletingCourse && (
+        <ActionNotification 
+          type="Delete" 
+          message="Supprimer le cours"
+          description={`Êtes-vous sûr de vouloir supprimer "${deletingCourse.title}" ? Cette action est irréversible.`}
+          showAs="modal"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Cours</h1>
@@ -160,8 +204,9 @@ const CourseList: React.FC = () => {
                   >
                     <FiEdit2 className="w-4 h-4" />
                   </Link>
+                  {/* Changed: Use handleDeleteClick instead of handleDelete */}
                   <button
-                    onClick={() => handleDelete(course.id)}
+                    onClick={() => handleDeleteClick(course.id, course.title)}
                     className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                     title="Supprimer"
                   >

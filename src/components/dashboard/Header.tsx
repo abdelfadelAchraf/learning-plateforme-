@@ -1,7 +1,16 @@
 import React from 'react';
-import { FiSearch, FiBell, FiUser, FiSettings } from "react-icons/fi";
+import { FiSearch, FiBell, FiUser, FiSettings, FiLogOut } from 'react-icons/fi';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Header: React.FC = () => {
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    if (window.confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+      logout();
+    }
+  };
+
   return (
     <header className="sticky top-0 z-30 bg-white border-b">
       <div className="px-6 py-4">
@@ -29,11 +38,22 @@ const Header: React.FC = () => {
               <FiSettings className="w-5 h-5" />
             </button>
 
+            <button
+              onClick={handleLogout}
+              className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
+              title="Déconnexion"
+            >
+              <FiLogOut className="w-5 h-5" />
+            </button>
+
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
                 <FiUser className="w-5 h-5 text-primary-600" />
               </div>
-              <span className="hidden md:inline text-sm font-medium">Admin</span>
+              <div className="hidden md:block">
+                <p className="text-sm font-medium">{user?.name}</p>
+                <p className="text-xs text-gray-500">{user?.email}</p>
+              </div>
             </div>
           </div>
         </div>

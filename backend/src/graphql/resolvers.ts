@@ -46,36 +46,26 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 export const root = {
   // ===== QUERY RESOLVERS =====
-  login: async ({ input }: { input: AuthInput }) => {
-    const { email, password } = input;
+ login: async ({ input }: { input: AuthInput }) => {
+  const { email, password } = input;
+  const user = await User.findOne({ email });
+  if (!user) throw new Error("Utilisateur non trouvé");
 
-    // Vérifier les credentials
-    if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
-      throw new Error("Email ou mot de passe incorrect");
-    }
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) throw new Error("Mot de passe incorrect");
 
-    // Créer un token JWT
-    const token = jwt.sign(
-      {
-        email,
-        role: "admin",
-        id: "admin-1",
-      },
-      JWT_SECRET as string,
-      { expiresIn: "24h" },
-    );
+  const token = jwt.sign(
+    { id: user._id, email: user.email, role: "user" },
+    JWT_SECRET as string,
+    { expiresIn: "24h" }
+  );
 
-    // Retourner la réponse
-    return {
-      token,
-      user: {
-        id: "admin-1",
-        email,
-        name: "Administrateur",
-        role: "admin",
-      },
-    };
-  },
+  return {
+    token,
+    user,
+  };
+},
+
 
   logout: () => {
     // Dans un système plus complexe, vous pourriez invalider le token
@@ -175,11 +165,21 @@ export const root = {
 
   // User Mutations
   createUser: async ({ input }: { input: any }) => {
-    const user = new User(input);
-    return await user.save();
-  },
+  // Hash the password
+  const hashedPassword = await bcrypt.hash(input.password, 10);
+
+  const user = new User({
+    ...input,
+    password: hashedPassword,
+  });
+
+  return await user.save();
+},
 
   updateUser: async ({ id, input }: { id: string; input: any }) => {
+    if (input.password) {
+      input.password = await bcrypt.hash(input.password, 10);
+    }
     return await User.findByIdAndUpdate(id, input, { new: true });
   },
 

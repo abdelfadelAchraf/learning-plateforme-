@@ -3,4 +3,26 @@
 
 button{cursor: pointer;}
 html{scroll-behavior: smooth;scrollbar-width: thin ; scroll-snap-type: mandatory;}
-/* *{font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;} */
+
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+.cardShadow{
+  box-shadow: 4px 4px 0px 0px black;
+}
+.cardShadow:hover{
+  box-shadow: 2px 2px 0px 0px black;
+  transition: all 0.2s linear;
+}
